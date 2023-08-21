@@ -38,16 +38,20 @@ async function fetchDataFromCoinGecko() {
 
     if (navigator.onLine) {
         try {
-            data = await fetch(COINGECKO_URL).then((res) => res.json());
+            data = await getCoinGeckoData();
         } catch (err) {
             handleCoinGeckoRequestError(err);
         }
     } else {
-        caches.open(RATE_CACHE_NAME).then((cache) => {
-            return cache.match(event.request).then((response) => {
-                return response || new Response("Offline data not available");
+        // オフラインの場合、キャッシュからデータを取得
+        data = await caches.open(RATE_CACHE_NAME).then((cache) => {
+            return cache.match(COINGECKO_URL).then((response) => {
+                return response ? response.json() : null;
             });
         });
+        if (!data) {
+            alert("Offline data not available");
+        }
     }
 
     if (data) {
