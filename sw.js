@@ -70,9 +70,14 @@ self.addEventListener('fetch', (event) => {
                 .catch(() => {
                     // オフライン時のみキャッシュから取得を試みる
                     return caches.open(RATE_CACHE_NAME).then((cache) => {
-                        return cache.match(event.request);
-                    }).then((response) => {
-                        return response || new Response("Offline data not available");
+                        return cache.match(event.request).then((response) => {
+                            if (response) {
+                                return response;
+                            } else {
+                                // キャッシュが存在しない場合の処理
+                                return new Response("Offline data not available");
+                            }
+                        });
                     });
                 })
         );
@@ -82,6 +87,10 @@ self.addEventListener('fetch', (event) => {
                 .match(event.request)
                 .then((response) => {
                     return response || fetch(event.request);
+                })
+                .catch(error => {
+                    console.error('An error occurred:', error);
+                    return new Response("An error occurred while fetching the resource");
                 })
         );
     }
