@@ -37,7 +37,9 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    console.log('Fetch event triggered for:', event.request.url);
     if (event.request.url.includes(RATE_URL)) {
+        console.log('Rate URL detected:', RATE_URL);
         event.respondWith(
             fetch(event.request)
                 .then((response) => {
