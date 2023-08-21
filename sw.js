@@ -1,5 +1,5 @@
 // Cache name
-const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test7';
+const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test8';
 const RATE_CACHE_NAME = 'rate-cache-v1';
 const RATE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3';
 // Cache targets
@@ -28,10 +28,14 @@ const urlsToCache = [
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches
-            .open(SW_CACHE_NAME)
+        caches.open(RATE_CACHE_NAME)
             .then((cache) => {
-                return cache.addAll(urlsToCache);
+                // 静的リソースのキャッシュ
+                cache.addAll(urlsToCache);
+                // 価格レートデータのキャッシュ
+                return fetch(RATE_URL).then((response) => {
+                    return cache.put(RATE_URL, response);
+                });
             })
     );
 });
@@ -71,7 +75,7 @@ self.addEventListener('fetch', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-    var cacheWhitelist = [SW_CACHE_NAME];
+    var cacheWhitelist = [SW_CACHE_NAME, RATE_CACHE_NAME];
 
     event.waitUntil(
         caches.keys().then((cacheNames) => {
