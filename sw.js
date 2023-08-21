@@ -69,6 +69,11 @@ self.addEventListener('fetch', (event) => {
                 })
                 .catch(() => {
                     // オフライン時のみキャッシュから取得を試みる
+                    caches.open(RATE_CACHE_NAME).then((cache) => {
+                        cache.keys().then((keys) => {
+                            console.log('Cache keys:', keys); // キャッシュ内の全てのキーを表示
+                        });
+                    });
                     return caches.open(RATE_CACHE_NAME).then((cache) => {
                         return cache.match(event.request).then((response) => {
                             if (response) {
