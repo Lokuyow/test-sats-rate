@@ -36,7 +36,7 @@ self.addEventListener('install', (event) => {
     );
 });
 
-elf.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', (event) => {
     if (event.request.url.includes(RATE_URL)) {
         event.respondWith(
             fetch(event.request)
