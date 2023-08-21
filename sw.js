@@ -1,5 +1,5 @@
 // Cache name
-const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test4';
+const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test5';
 const RATE_CACHE_NAME = 'rate-cache-v1';
 const RATE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3';
 // Cache targets
@@ -36,14 +36,18 @@ self.addEventListener('install', (event) => {
     );
 });
 
-self.addEventListener('fetch', (event) => {
+elf.addEventListener('fetch', (event) => {
     if (event.request.url.includes(RATE_URL)) {
         event.respondWith(
-            fetch(event.request) // ここで直接fetchを呼び出す
+            fetch(event.request)
                 .then((response) => {
+                    // レスポンスをクローン
+                    const clonedResponse = response.clone();
+                    // クローンをキャッシュに保存
                     caches.open(RATE_CACHE_NAME).then((cache) => {
-                        cache.put(event.request, response.clone());
+                        cache.put(event.request, clonedResponse);
                     });
+                    // 元のレスポンスを返す
                     return response;
                 })
                 .catch(() => {
