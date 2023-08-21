@@ -28,16 +28,18 @@ const urlsToCache = [
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(SW_CACHE_NAME)
+        caches
+            .open(SW_CACHE_NAME)
             .then((cache) => {
-                // 先に価格レートデータをキャッシュ
+                return cache.addAll(urlsToCache);
+            })
+            .then(() => {
+                return caches.open(RATE_CACHE_NAME);
+            })
+            .then((cache) => {
                 return fetch(RATE_URL)
                     .then((response) => {
                         return cache.put(RATE_URL, response);
-                    })
-                    .then(() => {
-                        // 次に他の静的リソースをキャッシュ
-                        return cache.addAll(urlsToCache);
                     });
             })
     );
