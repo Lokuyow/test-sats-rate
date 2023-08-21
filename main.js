@@ -43,12 +43,11 @@ async function fetchDataFromCoinGecko() {
             handleCoinGeckoRequestError(err);
         }
     } else {
-        data = await caches.open(RATE_CACHE_NAME).then((cache) => {
-            return cache.match(COINGECKO_URL).then((response) => {
-                return response ? response.json() : null;
+        caches.open(RATE_CACHE_NAME).then((cache) => {
+            return cache.match(event.request).then((response) => {
+                return response || new Response("Offline data not available");
             });
         });
-        alert('オフラインです。過去の価格レートを参照しています。');
     }
 
     if (data) {
