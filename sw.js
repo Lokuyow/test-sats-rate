@@ -79,7 +79,7 @@ self.addEventListener('fetch', (event) => {
             caches
                 .match(event.request)
                 .then((response) => {
-                    return response || new Response("Offline data not available");
+                    return response || fetch(event.request);
                 })
         );
     }
