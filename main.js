@@ -45,13 +45,10 @@ async function fetchDataFromCoinGecko() {
     } else {
         // オフラインの場合、キャッシュからデータを取得
         data = await caches.open(RATE_CACHE_NAME).then((cache) => {
-            return cache.match(COINGECKO_URL).then((response) => {
-                return response ? response.json() : null;
+            return cache.match(COINGECKO_URL).then(async (response) => {
+                return response ? await response.json() : null;
             });
         });
-        if (!data) {
-            alert("Offline data not available");
-        }
     }
 
     if (data) {
