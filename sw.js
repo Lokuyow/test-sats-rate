@@ -1,7 +1,7 @@
 // Cache name
 const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test7';
 const RATE_CACHE_NAME = 'rate-cache-v1';
-const RATE_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3';
+const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3';
 // Cache targets
 const urlsToCache = [
     './index.html',
@@ -37,9 +37,9 @@ self.addEventListener('install', (event) => {
                 return caches.open(RATE_CACHE_NAME);
             })
             .then((cache) => {
-                return fetch(RATE_URL)
+                return fetch(COINGECKO_URL)
                     .then((response) => {
-                        return cache.put(RATE_URL, response);
+                        return cache.put(COINGECKO_URL, response);
                     });
             })
     );
@@ -47,8 +47,8 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('fetch', (event) => {
     console.log('Fetch event triggered for:', event.request.url);
-    if (event.request.url.includes(RATE_URL)) {
-        console.log('Rate URL detected:', RATE_URL);
+    if (event.request.url.includes(COINGECKO_URL)) {
+        console.log('Rate URL detected:', COINGECKO_URL);
         event.respondWith(
             fetch(event.request)
                 .then((response) => {
