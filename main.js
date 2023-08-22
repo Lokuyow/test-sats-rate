@@ -38,7 +38,9 @@ async function fetchDataFromCoinGecko() {
     let data;
 
     try {
-        data = await getCoinGeckoData();
+        const response = await fetch(COINGECKO_URL);
+        data = await response.json();
+        handleVisibilityChange();
     } catch (err) {
         handleCoinGeckoRequestError(err);
     }
@@ -52,13 +54,6 @@ async function fetchDataFromCoinGecko() {
         calculateValues(lastUpdatedField);
     }
     updateElementClass(getDomElementById('update-prices'), false);
-}
-
-async function getCoinGeckoData() {
-    const response = await fetch(COINGECKO_URL);
-    const data = await response.json();
-    handleVisibilityChange();
-    return data;
 }
 
 function setupEventListeners() {
@@ -222,7 +217,7 @@ function updateLastUpdated(timestamp) {
     lastUpdatedTimestamp = timestamp;
 }
 
-// 更新ボタン
+// 画面を切り替えたときのレート更新ボタンと取得日時表示
 function handleVisibilityChange() {
     if (document.hidden) return;
 
@@ -234,6 +229,7 @@ function handleVisibilityChange() {
     updateElementClass(lastUpdatedElement, diffTime >= 610);
 }
 
+// レート更新ボタンを押したとき
 async function updateElementsBasedOnTimestamp() {
     const diffTime = Math.floor(Date.now() / 1000) - lastUpdatedTimestamp;
 
@@ -257,6 +253,7 @@ async function updateElementsBasedOnTimestamp() {
     }
 }
 
+// レート更新ボタンと取得日時表示の見た目
 function updateElementClass(element, isOutdated) {
     if (isOutdated) {
         element.classList.add('outdated');
