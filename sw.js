@@ -1,6 +1,6 @@
 // Cache name
-const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test14';
-const RATE_CACHE_NAME = 'rate-cache-v1';
+const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test15';
+const RATE_CACHE_NAME = 'rate-cache';
 const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3';
 // Cache targets
 const urlsToCache = [
@@ -87,7 +87,7 @@ self.addEventListener('fetch', (event) => {
         );
     } else {
         event.respondWith(
-            caches.open(RATE_CACHE_NAME).then((cache) => {
+            caches.open(SW_CACHE_NAME).then((cache) => {
                 return cache.match(event.request).then((response) => {
                     if (response) {
                         return response;
@@ -101,7 +101,7 @@ self.addEventListener('fetch', (event) => {
                 });
             })
         );
-    }
+    }    
 });
 
 self.addEventListener('activate', (event) => {
