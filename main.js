@@ -40,7 +40,6 @@ async function fetchDataFromCoinGecko() {
     try {
         const response = await fetch(COINGECKO_URL);
         data = await response.json();
-        handleVisibilityChange();
     } catch (err) {
         handleCoinGeckoRequestError(err);
     }
@@ -48,12 +47,13 @@ async function fetchDataFromCoinGecko() {
     if (data) {
         updateCurrencyRates(data);
         updateLastUpdated(data.bitcoin.last_updated_at);
+        updateElementClass(getDomElementById('last-updated'), false);
     }
     setDefaultValues();
     if (lastUpdatedField) {
         calculateValues(lastUpdatedField);
+        updateElementClass(getDomElementById('update-prices'), false);
     }
-    updateElementClass(getDomElementById('update-prices'), false);
 }
 
 function setupEventListeners() {
