@@ -74,11 +74,6 @@ self.addEventListener('fetch', (event) => {
                 })
                 .catch(() => {
                     // オフライン時のみキャッシュから取得を試みる
-                    caches.open(RATE_CACHE_NAME).then((cache) => {
-                        cache.keys().then((keys) => {
-                            console.log('2Cache keys:', keys); // キャッシュ内の全てのキーを表示
-                        });
-                    });
                     return caches.open(RATE_CACHE_NAME).then((cache) => {
                         return cache.match(event.request).then((response) => {
                             if (response) {
@@ -101,7 +96,13 @@ self.addEventListener('fetch', (event) => {
             caches
                 .match(event.request)
                 .then((response) => {
-                    return response || fetch(event.request);
+                    if (response) {
+                        return response;
+                    } else {
+                        return fetch(event.request).catch(() => {
+                            return new Response("Offline data not available");
+                        });
+                    }
                 })
                 .catch(error => {
                     console.error('An error occurred:', error);
