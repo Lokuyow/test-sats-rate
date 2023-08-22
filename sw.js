@@ -1,5 +1,5 @@
 // Cache name
-const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test10';
+const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test11';
 const RATE_CACHE_NAME = 'rate-cache-v1';
 const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3';
 // Cache targets
@@ -7,7 +7,6 @@ const urlsToCache = [
     './index.html',
     './styles.css',
     './main.js',
-    './sw.js',
     './manifest.json',
     './favicons/favicon.ico',
     './images/icon_x192.png',
