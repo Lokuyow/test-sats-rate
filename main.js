@@ -29,6 +29,7 @@ async function initializeApp() {
         setupEventListeners();
         handleServiceWorker();
         loadValuesFromQueryParams();
+        handleVisibilityChange();
         document.addEventListener('visibilitychange', handleVisibilityChange);
         window.addEventListener('online', handleOnline);
 }
@@ -88,7 +89,7 @@ function handleOnline() {
 
 function handleCoinGeckoRequestError(err) {
     console.error("Failed to fetch price data from CoinGecko:", err);
-    alert("価格レートの取得に失敗しました。過去の価格レートを参照しています。");
+    alert("価格レートの取得に失敗しました。時間をおいてからリロードしてみてください。");
 }
 
 function setDefaultValues() {
