@@ -29,6 +29,7 @@ async function initializeApp() {
         setupEventListeners();
         handleServiceWorker();
         loadValuesFromQueryParams();
+        handleVisibilityChange();
         document.addEventListener('visibilitychange', handleVisibilityChange);
         window.addEventListener('online', handleOnline);
 }
