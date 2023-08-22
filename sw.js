@@ -1,5 +1,5 @@
 // Cache name
-const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test7';
+const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test8';
 const RATE_CACHE_NAME = 'rate-cache-v1';
 const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3';
 // Cache targets
@@ -56,6 +56,11 @@ self.addEventListener('fetch', (event) => {
                 .then((response) => {
                     // レスポンスをクローン
                     const clonedResponse = response.clone();
+                    caches.open(RATE_CACHE_NAME).then((cache) => {
+                        cache.keys().then((keys) => {
+                            console.log('1Cache keys:', keys); // キャッシュ内の全てのキーを表示
+                        });
+                    });
                     // クローンをキャッシュに保存
                     caches.open(RATE_CACHE_NAME).then((cache) => {
                         cache.put(event.request, clonedResponse).catch((error) => {
@@ -71,7 +76,7 @@ self.addEventListener('fetch', (event) => {
                     // オフライン時のみキャッシュから取得を試みる
                     caches.open(RATE_CACHE_NAME).then((cache) => {
                         cache.keys().then((keys) => {
-                            console.log('Cache keys:', keys); // キャッシュ内の全てのキーを表示
+                            console.log('2Cache keys:', keys); // キャッシュ内の全てのキーを表示
                         });
                     });
                     return caches.open(RATE_CACHE_NAME).then((cache) => {
@@ -87,6 +92,11 @@ self.addEventListener('fetch', (event) => {
                 })
         );
     } else {
+        caches.open(RATE_CACHE_NAME).then((cache) => {
+            cache.keys().then((keys) => {
+                console.log('3Cache keys:', keys); // キャッシュ内の全てのキーを表示
+            });
+        });
         event.respondWith(
             caches
                 .match(event.request)
