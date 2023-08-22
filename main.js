@@ -29,7 +29,6 @@ async function initializeApp() {
         setupEventListeners();
         handleServiceWorker();
         loadValuesFromQueryParams();
-        handleVisibilityChange();
         document.addEventListener('visibilitychange', handleVisibilityChange);
         window.addEventListener('online', handleOnline);
 }
@@ -56,7 +55,9 @@ async function fetchDataFromCoinGecko() {
 
 async function getCoinGeckoData() {
     const response = await fetch(COINGECKO_URL);
-    return response.json();
+    const data = await response.json();
+    handleVisibilityChange();
+    return data;
 }
 
 function setupEventListeners() {
