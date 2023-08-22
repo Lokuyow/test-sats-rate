@@ -82,13 +82,13 @@ function getDomElementById(id) {
 }
 
 function handleOnline() {
-    console.log('オンラインに復帰しました。最新データを取得中です。');
+    console.log('オンラインに復帰しました。最新データを取得します。');
     fetchDataFromCoinGecko();
 }
 
 function handleCoinGeckoRequestError(err) {
     console.error("Failed to fetch price data from CoinGecko:", err);
-    alert("価格レートの取得に失敗しました。過去の価格レートを参照しています。時間をおいてからリロードしてみてください。");
+    alert("価格レートの取得に失敗しました。過去の価格レートを参照しています。");
 }
 
 function setDefaultValues() {
