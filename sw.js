@@ -1,5 +1,5 @@
 // Cache name
-const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test8';
+const SW_CACHE_NAME = 'sats-rate-caches-v1.30-test9';
 const RATE_CACHE_NAME = 'rate-cache-v1';
 const COINGECKO_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=jpy%2Cusd%2Ceur&include_last_updated_at=true&precision=3';
 // Cache targets
@@ -87,27 +87,20 @@ self.addEventListener('fetch', (event) => {
                 })
         );
     } else {
-        caches.open(RATE_CACHE_NAME).then((cache) => {
-            cache.keys().then((keys) => {
-                console.log('3Cache keys:', keys); // キャッシュ内の全てのキーを表示
-            });
-        });
         event.respondWith(
-            caches
-                .match(event.request)
-                .then((response) => {
+            caches.open(RATE_CACHE_NAME).then((cache) => {
+                return cache.match(event.request).then((response) => {
                     if (response) {
                         return response;
-                    } else {
-                        return fetch(event.request).catch(() => {
-                            return new Response("Offline data not available");
-                        });
                     }
-                })
-                .catch(error => {
-                    console.error('An error occurred:', error);
-                    return new Response("An error occurred while fetching the resource");
-                })
+                    return fetch(event.request).then((networkResponse) => {
+                        cache.put(event.request, networkResponse.clone());
+                        return networkResponse;
+                    }).catch(() => {
+                        return new Response("Offline data not available");
+                    });
+                });
+            })
         );
     }
 });
