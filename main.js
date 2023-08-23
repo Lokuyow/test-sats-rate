@@ -209,10 +209,12 @@ function formatCurrency(num, id) {
     return Number(num).toLocaleString(undefined, currencyFormatOptions[id]);
 }
 
-// 価格更新日時の表示
+// 価格レート更新日時の表示
 function updateLastUpdated(timestamp) {
     const updatedAt = new Date(timestamp * 1000);
-    const formatter = new Intl.DateTimeFormat('ja-JP', dateTimeFormatOptions);
+    const userLocale = navigator.language || navigator.userLanguage;
+    const formatter = new Intl.DateTimeFormat(userLocale, dateTimeFormatOptions);
+
     getDomElementById('last-updated').textContent = formatter.format(updatedAt);
     lastUpdatedTimestamp = timestamp;
 }
